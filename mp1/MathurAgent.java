@@ -7,6 +7,7 @@ public class MathurAgent implements Agent {
     private int numOfActions;
 
     private double[][] qValues;
+    private int[] actions;
 
     private final double discount = 0.95;
     private final double learning = 0.1;
@@ -21,6 +22,7 @@ public class MathurAgent implements Agent {
         this.numOfActions = numOfActions;
 
         this.qValues = new double[numOfActions][numOfStates];
+        this.actions = new int[this.numOfStates];
 
         for (int i = 0; i < numOfActions; i++) {
             for (int j = 0; j < numOfStates; j++) {
@@ -55,22 +57,22 @@ public class MathurAgent implements Agent {
     }
 
     public void updatePolicy(double reward, int action, int oldState, int newState) {
-        double factor = 1.0 - this.learning;
         double bestQ = this.qValues[0][newState];
+        int maxIndex = 0;
 
         for(int i = 0; i < numOfActions; i++) {
             double currentQ = this.qValues[i][newState];
             if(bestQ < currentQ) {
                 bestQ = currentQ;
+                maxIndex = i;
             }
         }
 
-        this.qValues[action][oldState] = this.qValues[action][oldState] * factor + learning * (reward + discount * bestQ);
+        qValues[action][oldState] = qValues[action][oldState] + (learning * (reward + (discount * bestQ) - qValues[action][oldState]));
+        actions[newState] = maxIndex;
     }
 
     public Policy getPolicy() {
-        int[] actions = new int[this.numOfStates];
-
         for(int i = 0; i < numOfStates; i++) {
             double bestQ = this.qValues[0][i];
 
