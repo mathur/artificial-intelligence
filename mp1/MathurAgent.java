@@ -52,7 +52,7 @@ public class MathurAgent implements Agent {
                 }
             }
 
-            return potentialActions.get(this.rand.nextInt(potentialActions.size()));
+            return potentialActions.get(0);
         }
     }
 
@@ -69,7 +69,6 @@ public class MathurAgent implements Agent {
         }
 
         qValues[action][oldState] = qValues[action][oldState] + (learning * (reward + (discount * bestQ) - qValues[action][oldState]));
-        actions[newState] = maxIndex;
     }
 
     public Policy getPolicy() {
